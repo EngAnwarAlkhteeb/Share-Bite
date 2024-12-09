@@ -51,12 +51,12 @@ function Cart() {
               <hr />
               <div className="cart-total-details">
                 <p>Delivery Fee</p>
-                <p>{getTotalCartAmount() === 0 ? 0 : 2}</p>
+                <p>{getTotalCartAmount() === 0 ? 0 : 10000}</p>
               </div>
               <hr />
               <div className="cart-total-details">
                 <b>Total</b>
-                <b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}</b>
+                <b>{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 10000}</b>
               </div>
             </div>
             <button onClick={() => navigate('/order')}>Proceed To Checkout</button>
