@@ -2,15 +2,20 @@
 
 import React, { useContext } from "react";
 import Image from "next/image";
-import { assets } from "@/assets/assets"; // Assuming assets are now in a dedicated 'assets' folder at the root
-import { StoreContext } from "@/context/StoreContext"; // Assuming StoreContext is now in a 'context' folder at the root
+import type { StaticImageData } from 'next/image'; // Import StaticImageData type
+import { assets } from "@/assets/assets";
+import { StoreContext } from "@/context/StoreContext";
+import img1 from '@/assets/food_1.png'
+import img2 from '@/assets/food_2.png'
 
 interface FoodItemProps {
   id: string;
   name: string;
   price: number;
   description: string;
-  image: string;
+  // --- CHANGE 1: Update image prop type ---
+  image: string | StaticImageData; // 
+  // --- END CHANGE 1 ---
 }
 
 const FoodItem: React.FC<FoodItemProps> = ({
@@ -20,24 +25,23 @@ const FoodItem: React.FC<FoodItemProps> = ({
   description,
   image,
 }) => {
-  const { cartItems, addToCart, removeFromCart, url } =
-    useContext(StoreContext);
+  // --- CHANGE 2: Remove 'url' from useContext destructuring as it's no longer needed for local images ---
+  const { cartItems, addToCart, removeFromCart } = useContext(StoreContext)!;
+  // --- END CHANGE 2 ---
 
   return (
     <div className="w-full m-auto rounded-xl shadow-[0px_0px_15px_rgba(0,0,0,0.08)] transition-all duration-300 animate-fadeIn h-full hover:rotate-1">
       <div className="relative">
         <Image
-          className="w-full h-[150px] object-cover rounded-t-xl"
-          src={url + "images/" + image}
-          alt={name}
-          width={300} // Approximate width, adjust as needed
-          height={150} // Approximate height, adjust as needed
+          className="h-[150px] object-cover rounded-t-xl w-[150px]"
+          src={img1}
+          alt={name} 
         />
         {!cartItems[id] ? (
           <Image
             className="absolute bottom-4 right-4 w-[35px] cursor-pointer rounded-full"
             onClick={() => addToCart(id)}
-            src={assets.add_icon_white}
+            src={img2}
             alt="Add to cart"
             width={35}
             height={35}
@@ -68,7 +72,7 @@ const FoodItem: React.FC<FoodItemProps> = ({
         <div className="flex justify-between items-center mb-2.5">
           <p className="text-xl font-medium">{name}</p>
           <Image
-            src={assets.rating_starts}
+            src={assets.play_store}
             alt="Rating"
             className="w-[70px]"
             width={70}

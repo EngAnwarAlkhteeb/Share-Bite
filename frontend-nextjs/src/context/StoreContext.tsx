@@ -1,15 +1,21 @@
 // context/StoreContext.tsx
-"use client"; // <--- Add this line here
+"use client";
 
 import React, { createContext, useEffect, useState, ReactNode } from "react";
-// import axios from "axios"; // Commented out axios import
+// import axios from "axios"; // axios is commented out as per your previous instruction
 
+// Import FoodItemType and the static food_list from assets.ts
+import { food_list as static_food_list, FoodItemType as AssetFoodItemType } from "@/assets/assets";
+import type { StaticImageData } from 'next/image'; // Import for image type
+
+// Refine FoodItemType for context if it's not exactly the same as in assets.ts
+// For now, we'll use the one from assets.ts for consistency.
 export interface FoodItemType {
   _id: string;
   name: string;
   price: number;
   description: string;
-  image: string;
+  image: string | StaticImageData; // Image can be string (if from URL) or StaticImageData (if imported)
   category: string;
 }
 
@@ -39,12 +45,9 @@ const StoreContextProvider: React.FC<StoreContextProviderProps> = (props) => {
   const [cartItems, setCartItems] = useState<CartItemsType>({});
   const url: string = "http://localhost:4000/";
   const [token, setToken] = useState<string>("");
-  const [food_list, setFoodList] = useState<FoodItemType[]>([
-    // Dummy data
-    { _id: "1", name: "Vegan Pizza", price: 120000, description: "Delicious vegan pizza.", image: "pizza.png", category: "Pizza" },
-    { _id: "2", name: "Cheesy Burger", price: 75000, description: "Juicy burger with cheese.", image: "burger.png", category: "Burger" },
-    { _id: "3", name: "Sushi Rolls", price: 90000, description: "Fresh sushi rolls.", image: "sushi.png", category: "Sushi" },
-  ]);
+
+  // Initialize food_list state with the imported static_food_list from assets.ts
+  const [food_list, setFoodList] = useState<FoodItemType[]>(static_food_list);
 
   const addToCart = async (itemId: string) => {
     if (!cartItems[itemId]) {
@@ -52,16 +55,19 @@ const StoreContextProvider: React.FC<StoreContextProviderProps> = (props) => {
     } else {
       setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
     }
+    // API calls remain commented out
   };
 
   const removeFromCart = async (itemId: string) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+    // API calls remain commented out
   };
 
   const getTotalCartAmount = (): number => {
     let totalAmount: number = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
+        // Ensure itemInfo is found before accessing its properties
         const itemInfo = food_list.find((product) => product._id === item);
         if (itemInfo) {
           totalAmount += itemInfo.price * cartItems[item];
@@ -72,11 +78,12 @@ const StoreContextProvider: React.FC<StoreContextProviderProps> = (props) => {
   };
 
   useEffect(() => {
-    // No API calls, so this useEffect is now essentially a no-op for now
+    // This useEffect is currently a no-op as API calls are commented out.
+    // When you re-enable backend, you'd fetch data here and setFoodList.
   }, []);
 
   const contextValue: StoreContextType = {
-    food_list,
+    food_list, // This now holds the data from assets.ts
     cartItems,
     setCartItems,
     addToCart,
